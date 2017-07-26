@@ -1,5 +1,6 @@
 FROM phusion/baseimage
 MAINTAINER Thiago Taranto <ttaranto@gmail.com>
+MAINTAINER Aleksey Dorokhov <akeinhell@gmail.com>
 
 # ensure UTF-8
 RUN locale-gen en_US.UTF-8
@@ -16,19 +17,43 @@ RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 CMD ["/sbin/my_init"]
 
 # nginx-php installation
+RUN DEBIAN_FRONTEND="noninteractive" add-apt-repository ppa:ondrej/php
 RUN DEBIAN_FRONTEND="noninteractive" apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y upgrade
 RUN DEBIAN_FRONTEND="noninteractive" apt-get update --fix-missing
-RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install php7.0
-RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install php7.0-fpm php7.0-common php7.0-cli php7.0-mysqlnd php7.0-mcrypt php7.0-curl php7.0-bcmath php7.0-mbstring php7.0-soap php7.0-xml php7.0-zip php7.0-json php7.0-imap php-xdebug php-pgsql
+RUN DEBIAN_FRONTEND="noninteractive" apt-cache policy search php7.1*
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install php7.1
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install php7.1-fpm php7.1-common php7.1-cli php7.1-mysqlnd php7.1-mcrypt php7.1-curl php7.1-bcmath php7.1-mbstring php7.1-soap php7.1-xml php7.1-zip php7.1-json php7.1-imap php-xdebug php-pgsql
 
 # install nginx (full)
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y nginx-full
 
 # install latest version of nodejs
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y nodejs
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y npm
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git
+
+ENV NVM_DIR /usr/local/.nvm
+ENV NODE_VERSION stable
+
+# Install nvm
+RUN git clone https://github.com/creationix/nvm.git $NVM_DIR && \
+    cd $NVM_DIR && \
+    git checkout `git describe --abbrev=0 --tags`
+
+# Install default version of Node.js
+RUN . $NVM_DIR/nvm.sh && \
+    nvm install $NODE_VERSION && \
+    nvm alias default $NODE_VERSION && \
+    nvm use default
+
+# Add nvm.sh to .bashrc for startup...
+RUN echo ". ${NVM_DIR}/nvm.sh" > $HOME/.bashrc && \
+    . $HOME/.bashrc
+
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+
+
+#cleanup
+RUN rm -rf /var/lib/apt/lists/*
 
 # install php composer
 RUN curl -sS https://getcomposer.org/installer | php
@@ -47,13 +72,13 @@ ADD build/.bashrc /root/.bashrc
 # disable services start
 RUN update-rc.d -f apache2 remove
 RUN update-rc.d -f nginx remove
-RUN update-rc.d -f php7.0-fpm remove
+RUN update-rc.d -f php7.1-fpm remove
 
 # add startup scripts for nginx
 ADD build/nginx.sh /etc/service/nginx/run
 RUN chmod +x /etc/service/nginx/run
 
-# add startup scripts for php7.0-fpm
+# add startup scripts for php7.1-fpm
 ADD build/phpfpm.sh /etc/service/phpfpm/run
 RUN chmod +x /etc/service/phpfpm/run
 
