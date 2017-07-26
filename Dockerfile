@@ -58,6 +58,7 @@ RUN rm -rf /var/lib/apt/lists/*
 # install php composer
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
+RUN composer global require hirak/prestissimo
 
 # add build script (also set timezone to Americas/Sao_Paulo)
 RUN mkdir -p /root/setup
