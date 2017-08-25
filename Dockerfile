@@ -34,6 +34,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git
 # install apache2 utils to enable htpassd
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y apache2-utils
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y curl
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential
 
 # install nodeJS
 
@@ -56,7 +57,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.11.1
+ENV NODE_VERSION 6.10.3
 
 RUN buildDeps='xz-utils curl ca-certificates' \
     && set -x \
