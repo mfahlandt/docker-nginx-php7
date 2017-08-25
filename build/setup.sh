@@ -4,8 +4,8 @@
 # UPDATE CONFIG FILES
 ##-------------------------------------------------------
 
-# set timezone machine to America/Sao_Paulo
-cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+# set timezone machine to Europe/Berlin
+cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # set UTF-8 environment
 echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
@@ -21,9 +21,9 @@ echo 'xdebug.scream=0' >> /etc/php/7.1/mods-available/xdebug.ini
 echo 'xdebug.show_local_vars=1' >> /etc/php/7.1/mods-available/xdebug.ini
 echo 'xdebug.idekey=PHPSTORM' >> /etc/php/7.1/mods-available/xdebug.ini
 
-# set PHP7 timezone to America/Sao_Paulo
-sed -i "s/;date.timezone =*/date.timezone = America\/Sao_Paulo/" /etc/php/7.1/fpm/php.ini
-sed -i "s/;date.timezone =*/date.timezone = America\/Sao_Paulo/" /etc/php/7.1/cli/php.ini
+# set PHP7 timezone to Europe/Berlin
+sed -i "s/;date.timezone =*/date.timezone = Europe\/Berlin/" /etc/php/7.1/fpm/php.ini
+sed -i "s/;date.timezone =*/date.timezone = Europe\/Berlin/" /etc/php/7.1/cli/php.ini
 
 # setup php7.1-fpm to not run as daemon (allow my_init to control)
 sed -i "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.1/fpm/php-fpm.conf

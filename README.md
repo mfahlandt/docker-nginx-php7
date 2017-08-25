@@ -15,7 +15,7 @@ All services are defined and managed using the phusion/baseimage methodology. Lo
 * Nginx (lastest)
 * PHP-FPM (7.1) (with Xdebug)
 * Composer (PHP)
-* Node.JS (8)
+* Node.JS (6.10.3)
 * XTERM environment support w/colors
 
 ### Default Settings
@@ -31,6 +31,13 @@ The following folder is specified as the default root web folder:
 ``/var/www/public``
 
 Note that the ``/var/www/public`` is the root folder for serving PHP files for your web server.
+
+### Change PHP.ini
+
+If you Base your image on this you can overwrite the php.ini with overwrting this config
+
+``COPY yourfile/path /etc/php/7.1/cli/php.ini`
+
 
 ### Example
 ``$ docker run -p 3306:3306 --name my_mysql -e MYSQL_ROOT_PASSWORD=mysecretpassword -d mysql``
@@ -58,4 +65,4 @@ Contains nginx config files (nginx.conf) as well the scripts to configure php-fp
 This image supports [PostgreSQL](https://hub.docker.com/_/postgres/) and [MySQL](https://hub.docker.com/_/mysql/) and/or [MariaDB](https://hub.docker.com/_/mariadb/).
 
 ### Timezone
-The machine is configured to user America/Sao_Paulo timezone. The Nginx configuration is ready to run a [Laravel](https://laravel.com/) app.
+The machine is configured to user Europe/Berlin timezone. The Nginx configuration is ready to run a [Laravel](https://laravel.com/) or [Symfony](https://symfony.com/)app.
